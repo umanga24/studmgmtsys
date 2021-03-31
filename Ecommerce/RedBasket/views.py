@@ -18,6 +18,7 @@ def cart(request):
     else:
         items = []
         order = {'get_cart_total':0, 'get_cart_items':0}
+
     context = {'items' : items, 'order':order}
     return render(request, 'RB/cart.html', context)
 
@@ -30,6 +31,7 @@ def checkout(request):
     else:
         items = []
         order = {'get_cart_total':0, 'get_cart_items':0}
+
     context = {'items' : items, 'order':order}
     return render(request, 'RB/checkout.html', context)
 
@@ -44,7 +46,8 @@ def updateItem(request):
     customer = request.user.customer
     product = Product.objects.get(id=productId)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    orderIteam, created = Orderiteam.objects.get_or_created(order=order, product=product)
+
+    orderIteam, created = Orderiteam.objects.get_or_create(order=order, product=product)
 
     if action == 'add':
         orderIteam.quantity = (orderIteam.quantity + 1)
@@ -52,7 +55,9 @@ def updateItem(request):
         orderIteam.quantity = (orderIteam.quantity - 1)
 
     orderIteam.save()
-    if orderIteam.quantity <=0:
+
+
+    if orderIteam.quantity <= 0:
         orderIteam.delete()
 
     return JsonResponse('Ieam was added', safe=False)
